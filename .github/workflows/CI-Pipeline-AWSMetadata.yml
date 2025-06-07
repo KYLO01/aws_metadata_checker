@@ -23,5 +23,5 @@ jobs:
       run: |
         pwsh -NoProfile -Command "& {
           Import-Module Pester -RequiredVersion 3.4.0
-          Invoke-Pester -Path .\testd.ps1 -EnableExit
+          Invoke-Pester -Path .\Test-Get-AWSMetadata.ps1 -EnableExit
         }"
