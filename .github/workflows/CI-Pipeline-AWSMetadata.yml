@@ -16,7 +16,7 @@ jobs:
 
     - name: Install Pester 3.4.0
       run: |
-        Install-Module Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser
+        Install-Module Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
         Import-Module Pester -RequiredVersion 3.4.0
 
     - name: Run Pester tests
