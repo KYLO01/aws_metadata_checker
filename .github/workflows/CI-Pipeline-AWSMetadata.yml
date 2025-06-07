@@ -19,7 +19,9 @@ jobs:
         Install-Module Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
         Import-Module Pester -RequiredVersion 3.4.0
 
-    - name: Run Pester tests
+    - name: Run Pester tests in Clean Session
       run: |
-        Invoke-Pester -Script ".\Test-Get-AWSMetadata.ps1" -Output Detailed
-      shell: pwsh
+        pwsh -NoProfile -Command "& {
+          Import-Module Pester -RequiredVersion 3.4.0
+          Invoke-Pester -Path .\testd.ps1 -EnableExit
+        }"
