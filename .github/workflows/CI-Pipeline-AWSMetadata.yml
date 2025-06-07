@@ -1,0 +1,24 @@
+name: PowerShell Pester Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install PowerShell modules
+      run: |
+        Install-Module -Name Pester -Force -SkipPublisherCheck
+
+    - name: Run Pester tests
+      run: |
+        Invoke-Pester -Script ".\Test-Get-AWSMetadata.ps1" -Output Detailed
+      shell: pwsh

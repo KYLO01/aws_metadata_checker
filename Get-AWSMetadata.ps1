@@ -12,6 +12,7 @@ Usage........: .\Get-AWSMetadata.ps1
 Error Return.: E1) Invoke-RestMethod : Unable to connect to the remote server
 .............: E2) Error retrieving value
 .............: E3) Key '$RequestedKey' not found or unreachable.
+.............: E4) Failed to get IMDSv2 token: $_
 Resolution...: - The metadata URL http://169.254.169.254/latest/meta-data/ is accessible only within an EC2 instance. 
 .............: If you try it from outside (e.g., local laptop), it won't work as expected.
 .............: Even, by using AWS PowerShell Cmdlets like Get-EC2Instance (get data from AWS API)
