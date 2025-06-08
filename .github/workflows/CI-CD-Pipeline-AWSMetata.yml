@@ -1,0 +1,73 @@
+name: CI/CD Pipeline for AWS Metadata Checker
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ci-tests:
+    name: CI - Run Pester Tests Locally
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Pester 3.4.0
+        run: |
+          Install-Module Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
+          Import-Module Pester -RequiredVersion 3.4.0
+
+      - name: Run Pester Tests
+        run: |
+          pwsh -NoProfile -Command "& {
+          Import-Module Pester -RequiredVersion 3.4.0
+          Invoke-Pester -Path .\Test-Get-AWSMetadata.ps1 -EnableExit
+          }"
+
+  cd-deploy:
+    name: CD - Deploy to EC2 and Run Live Tests
+    runs-on: ubuntu-latest
+    needs: ci-tests   # Ensures this runs only if ci-tests job passes
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Save EC2 Private Key
+        run: |
+          echo "${{ secrets.AWS_EC2_PRIVATE_KEY }}" > aws-ec2-key.pem
+          chmod 400 aws-ec2-key.pem
+
+      - name: Upload Project to EC2
+        run: |
+          scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ./aws_metadata_checker ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:~/aws_metadata_checker
+
+      - name: Run Tests & Save Metadata on EC2
+        run: |
+          ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} '
+            pwsh -Command "
+              Set-Location ~/aws_metadata_checker;
+              if (-Not (Get-Module -ListAvailable -Name Pester -RequiredVersion 3.4.0)) {
+                Install-Module -Name Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
+              }
+              Invoke-Pester -Path .\Test-Get-AWSMetadata.ps1 -EnableExit;
+              # Simulate generating metadata.json
+              \"{ `\"status`\": `\"success`\", `\"timestamp`\": `\"$(Get-Date)`\" }\" | Out-File metadata.json
+            "
+          '
+
+      - name: Copy metadata.json from EC2 to runner
+        run: |
+          scp -o StrictHostKeyChecking=no -i aws-ec2-key.pem ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:~/aws_metadata_checker/metadata.json .
+
+      - name: Commit metadata.json to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add metadata.json
+          git commit -m "Update metadata.json from CD pipeline" || echo "No changes to commit"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

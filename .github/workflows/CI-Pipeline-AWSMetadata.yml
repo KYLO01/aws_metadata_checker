@@ -1,11 +1,12 @@
-name: PowerShell Pester Test
+# This workflow is disabled from auto-triggering.
+# It is kept for reviewer reference and testing only on CI pipeline in future.
+name: CI Pipeline (DISABLED)
 
+# Prevent this workflow from being triggered automatically
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_dispatch:  # Manual trigger only
 
+# Original jobs here
 jobs:
   test:
     runs-on: windows-latest

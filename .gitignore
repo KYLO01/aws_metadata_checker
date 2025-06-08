@@ -1,0 +1,23 @@
+#This file tells Git which files or folders to ignore—i.e., not track, not commit, and not push to GitHub.
+#It's essential for preventing sensitive files like .pem keys, credentials, temporary build files, and system files from accidentally being uploaded to your repository.
+
+# Ignore private keys
+*.pem
+
+# Ignore PowerShell metadata/test files
+*.ps1xml
+*.ps1~*
+
+# Ignore GitHub workflows logs
+*.log
+
+# Ignore Python bytecode
+__pycache__/
+*.pyc
+
+# Ignore VSCode settings (if using)
+.vscode/
+
+# Ignore temp or backup files
+*.tmp
+*.bak
