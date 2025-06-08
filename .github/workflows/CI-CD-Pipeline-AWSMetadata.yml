@@ -42,7 +42,7 @@ jobs:
 
       - name: Upload Project to EC2
         run: |
-          scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ${{ RUNNER_WORKSPACE }} ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/
+          scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ${{ runner.workspace }} ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/
 
       - name: Run Tests & Save Metadata on EC2
         run: |
