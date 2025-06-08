@@ -112,7 +112,7 @@ Json formatted output
 {
   "ami-id": "ami-006b4a3ad5f56fbd6",
   "instance-action": "none",
-  "local-hostname": "ip-172-31-43-104.eu-north-1.compute.internal",
+  "local-hostname": "ip-172-XX-XX-XXX.eu-north-1.compute.internal",
  ...
 }
 
@@ -120,15 +120,15 @@ Json formatted output
 
 - aws_metadata_checker/
 - │
-- ├── aws-ec2-key.pem                                  # AWS private key pair for ec2-user@16.171.26.83 access
 - ├── Get-AWSMetadata.ps1                              # Main script to fetch AWS EC2 metadata with json formatted output
 - ├── README.md                                        # This file
-- ├── test-Get-AWSMetadata.ps1                         # Pester Unit test script
-- ├── metatdata_20250606.json                          # Actual result of AWS EC2 metadata with json formatted output file via ec2-user@16.171.26.83
-- ├── metadata.json                                    # Output file from Pester test
-- ├── .github/workflows/                               # CI/CD pipelines
+- ├── test-Get-AWSMetadata.ps1                         # Pester Unit test mock script
+- ├── metatdata_20250606.json                          # Actual result of AWS EC2 metadata with json formatted output file by first unit test manually
+- ├── metadata.json                                    # Actual result of AWS EC2 metadata by CI CD Pipeline
+- ├── .github/workflows/                               # CI/CD pipeline workflow
 - ├── .github/workflows/CI-Pipeline-AWSMetadata.yml    # CI only pipeline for CI testing
-- └── .github/workflows/CI-CD-Pipeline-AWSMetadata.yml # CI CD pipeline
+- ├── .github/workflows/CI-CD-Pipeline-AWSMetadata.yml # CI & CD pipeline
+- └── .gitignore                                       #
 
 # Author
 
