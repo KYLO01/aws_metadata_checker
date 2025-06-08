@@ -1,9 +1,5 @@
 name: CI/CD Pipeline for AWS Metadata Checker
 
-defaults:
-  run:
-    working-directory: ${{ github.workspace }}
-
 on:
   push:
     branches:
@@ -46,7 +42,7 @@ jobs:
 
       - name: Upload Project to EC2
         run: |
-          scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ./aws_metadata_checker ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:~/aws_metadata_checker
+          scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ./aws_metadata_checker ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/
 
       - name: Run Tests & Save Metadata on EC2
         run: |
@@ -64,7 +60,7 @@ jobs:
 
       - name: Copy metadata.json from EC2 to runner
         run: |
-          scp -o StrictHostKeyChecking=no -i aws-ec2-key.pem ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:~/aws_metadata_checker/metadata.json .
+          scp -o StrictHostKeyChecking=no -i aws-ec2-key.pem ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/aws_metadata_checker/metadata.json .
 
       - name: Commit metadata.json to repo
         run: |
