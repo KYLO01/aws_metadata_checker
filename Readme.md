@@ -41,11 +41,11 @@ To fetch a specific key
 ./Get-AWSMetadata.ps1 -Key "hostname"
 
 To fetch metadata json format output manually by the script via your AWS EC2 instance
-1. SSH into AWS EC2 Instance via your Public IP (it will be changed everytime start/stop instance)/Elastic IP (better) with ec2-user (Amazon Linux default user - non-root), i.e. ec2-user@<your EC2 Public IP or Elastic IP>
-(Git Bash Terminal 1) ssh -i "<File path>\aws-ec2-key.pem" ec2-user@<your EC2 Public IP or Elastic IP>
+1. SSH into AWS EC2 Instance via your Public IP (it will be changed everytime start/stop instance)/Elastic IP (better) with ec2-user (Amazon Linux default user - non-root), i.e. ec2-user@[your EC2 Public IP or Elastic IP]
+(Git Bash Terminal 1) ssh -i "[File path]\aws-ec2-key.pem" ec2-user@[your EC2 Public IP or Elastic IP]
 
 2. Open another Git Bash and copy the powershell script file from laptop to AWS EC2 instance
-(Git Bash Terminal 2) scp -i "<File path>\aws-ec2-key.pem" Get-AWSMetadata.ps1 ec2-user@<your EC2 Public IP or Elastic IP>:/home/ec2-user/
+(Git Bash Terminal 2) scp -i "[File path]\aws-ec2-key.pem" Get-AWSMetadata.ps1 ec2-user@[your EC2 Public IP or Elastic IP]:/home/ec2-user/
 
 3. Back to the SSH connected terminal and see if the file exist or not
 (Git Bash Terminal 1 - EC2 connected) pwd
@@ -64,7 +64,7 @@ To fetch metadata json format output manually by the script via your AWS EC2 ins
 7. Run ./Get-AWSMetadata.ps1 to output json format metadata and metadata.json file will be generated
 (Git Bash Terminal 1 - EC2 connected with PS) ./Get-AWSMetadata.ps1
 
-8. ./Get-AWSMetadata.ps1 -Key "<key name, e.g. hostname>" to output data value correspondingly
+8. ./Get-AWSMetadata.ps1 -Key "[key name, e.g. hostname]" to output data value correspondingly
 (Git Bash Terminal 1 - EC2 connected with PS) ./Get-AWSMetadata.ps1 -Key "hostname"
 
 To run CI CD pipeline
@@ -82,18 +82,22 @@ h. Name it AWS_EC2_PRIVATE_KEY
 i. Paste your EC2 instance’s PEM private key content as the value
 j. Click Add secret
 
-3. Change something on a file under aws_metadata_checker folder project
+3. Install PowerShell on your AWS EC2 instance (it does not include this task on CD pipeline)
+sudo yum install -y https://github.com/PowerShell/PowerShell/releases/download/v7.4.1/powershell-7.4.1-1.rh.x86_64.rpm 
+sudo yum install -y powershell
 
-4. Run git add
+4. Change something on a file under aws_metadata_checker folder project
+
+5. Run git add
 (Git Bash Terminal 3 ) git add .
 
-5. Run git commit
-(Git Bash Terminal 3 ) git commit -m <commit message>
+6. Run git commit
+(Git Bash Terminal 3 ) git commit -m "[commit message]"
 
-6. Run git push
+7. Run git push
 (Git Bash Terminal 3 ) git push -u origin main
 
-7. Check the result on GitHub -> Actions -> Jobs -> CI CD pipeline workflow
+8. Check the result on GitHub -> Actions -> Jobs -> CI CD pipeline workflow
 
 # Example
 
