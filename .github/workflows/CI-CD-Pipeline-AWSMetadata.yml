@@ -65,7 +65,7 @@ jobs:
 
       - name: Copy metadata.json from EC2 to runner
         run: |
-          scp -o StrictHostKeyChecking=no -i aws-ec2-key.pem ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/aws_metadata_checker/aws_metadata_checker/metadata.json ${{ runner.workspace }}
+          scp -o StrictHostKeyChecking=no -i aws-ec2-key.pem ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/metadata.json ${{ runner.workspace }}
 
       - name: Commit metadata.json to repo
         run: |
