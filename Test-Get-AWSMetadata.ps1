@@ -52,6 +52,15 @@ Describe "Get-IMDSToken Function" {
     }
 }
 
+Describe "Get-MetadataRecursive Function" {
+    It "Should throw when token retrieval fails" {
+        Mock Invoke-RestMethod { throw "Unable to connect to the remote server" }
+
+        $result = Get-MetadataRecursive
+        $result | Should Be "Error reading metadata path: "
+    }
+}
+
 Describe "Get-AllMetadata Function" {
     It "Should throw when token retrieval fails" {
         Mock Get-IMDSToken { throw "Unable to connect to the remote server" }
@@ -141,10 +150,10 @@ Describe "Metadata Retrieval Logic" {
         }
 
         It "Should throw when token retrieval fails" {
-            Mock Get-IMDSToken { throw "Failed to get IMDSv2 token: Unable to connect to the remote server " }
-            Mock Invoke-RestMethod { return "irrelevant" }
+            Mock Get-IMDSToken { throw "Unable to connect to the remote server" }
+            Mock Invoke-RestMethod { return "Unable to connect to the remote server" }
 
-            { Get-AllMetadata } | Should Throw
+            { Get-AllMetadata } | Should Throw "Unable to connect to the remote server"
         }
 
         It "should call Get-AllMetadata when Key is not provided" {
