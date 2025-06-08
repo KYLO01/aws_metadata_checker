@@ -32,7 +32,7 @@ Usage........: Invoke-Pester -Path .\Test-Get-AWSMetadata.ps1
 #>
 
 # Ensure the main script is dot-sourced to access its functions
-# $PSScriptRoot="" in this case
+# $PSScriptRoot="" in this case`
 . "$PSScriptRoot\Get-AWSMetadata.ps1"
 
 Describe "Get-IMDSToken Function" {
@@ -45,18 +45,21 @@ Describe "Get-IMDSToken Function" {
 
     It "Should throw when token retrieval fails" {
         Mock Get-IMDSToken { throw "Failed to get IMDSv2 token: Unable to connect to the remote server" }
-        Mock Invoke-RestMethod { return "irrelevant" }
+        # Simulate Invoke-RestMethod throwing inside the function
+        Mock Invoke-RestMethod { throw "Unable to connect to the remote server" }
 
-        { Get-IMDSToken } | Should Throw
+        { Get-IMDSToken } | Should Throw "Failed to get IMDSv2 token: Unable to connect to the remote server"
     }
 }
 
 Describe "Get-AllMetadata Function" {
     It "Should throw when token retrieval fails" {
-        Mock Get-IMDSToken { throw "Failed to get IMDSv2 token: Unable to connect to the remote server" }
-        Mock Invoke-RestMethod { return "irrelevant" }
+        Mock Get-IMDSToken { throw "Unable to connect to the remote server" }
 
-        { Get-IMDSToken } | Should Throw
+        # Simulate Invoke-RestMethod throwing inside the function
+        Mock Invoke-RestMethod { throw "Unable to connect to the remote server" }
+
+        { Get-IMDSToken } | Should Throw "Unable to connect to the remote server"
     }
 
     Mock Get-IMDSToken { return "mocked-token" }
@@ -84,10 +87,12 @@ Describe "Get-AllMetadata Function" {
 
 Describe "Get-MetadataByKey Function" {
     It "Should throw when token retrieval fails" {
-        Mock Get-IMDSToken { throw "Failed to get IMDSv2 token: Unable to connect to the remote server" }
-        Mock Invoke-RestMethod { return "irrelevant" }
+        Mock Get-IMDSToken { throw "Unable to connect to the remote server" }
 
-        { Get-IMDSToken } | Should Throw
+        # Simulate Invoke-RestMethod throwing inside the function
+        Mock Invoke-RestMethod { throw "Unable to connect to the remote server" }
+
+        { Get-IMDSToken } | Should Throw "Unable to connect to the remote server"
     }
 
     Mock Get-IMDSToken { return "mocked-token" }
@@ -119,10 +124,12 @@ Describe "Metadata Retrieval Logic" {
 
     Context "When using a valid key" {
         It "Should throw when token retrieval fails" {
-            Mock Get-IMDSToken { throw "Failed to get IMDSv2 token: Unable to connect to the remote server " }
-            Mock Invoke-RestMethod { return "irrelevant" }
+            Mock Get-IMDSToken { throw "Unable to connect to the remote server" }
 
-            { Get-MetadataByKey -RequestedKey "instance-id" } | Should Throw
+            # Simulate Invoke-RestMethod throwing inside the function
+            Mock Invoke-RestMethod { throw "Unable to connect to the remote server" }
+
+            { Get-MetadataByKey -RequestedKey "instance-id" } | Should Throw "Unable to connect to the remote server"
         }
 
         It "should call Get-MetadataByKey when Key is provided" {

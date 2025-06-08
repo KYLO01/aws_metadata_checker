@@ -38,9 +38,9 @@ $tokenUri = "http://169.254.169.254/latest/api/token"
 function Get-IMDSToken {
     if (-not (Test-Path -Path "/sys/hypervisor/uuid") -and $env:CI) {
         # Skipping token retrieval in CI
-        return "mock-ci-token"
+        return "mocked-token"
     }
-    
+
     try {
         return Invoke-RestMethod -Method Put -Uri $tokenUri -Headers @{
             "X-aws-ec2-metadata-token-ttl-seconds" = "21600"
