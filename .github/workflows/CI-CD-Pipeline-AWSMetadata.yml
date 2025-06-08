@@ -44,7 +44,7 @@ jobs:
         run: |
           scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ${{ runner.workspace }} ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/
 
-      - name: Run Tests & Save Metadata on EC2
+      - name: Run Tests
         run: |
           ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} '
             pwsh -Command "
@@ -52,9 +52,15 @@ jobs:
               if (-Not (Get-Module -ListAvailable -Name Pester -RequiredVersion 3.4.0)) {
                 Install-Module -Name Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
               }
-              Invoke-Pester -Path . /home/ec2-user/aws_metadata_checker/Test-Get-AWSMetadata.ps1 -EnableExit;
-              # Simulate generating metadata.json
-              \"{ `\"status`\": `\"success`\", `\"timestamp`\": `\"$(Get-Date)`\" }\" | Out-File metadata.json
+              Invoke-Pester -Path /home/ec2-user/aws_metadata_checker/aws_metadata_checker/Test-Get-AWSMetadata.ps1 -EnableExit;
+            "
+          '
+          
+      - name: Run Get-AWSMetadata and Save Metadata on EC2
+        run: |
+          ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} '
+            pwsh -Command "
+              ./Get-AWSMetadata.ps1
             "
           '
 
