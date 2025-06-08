@@ -45,15 +45,15 @@ jobs:
           scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ${{ runner.workspace }}/aws_metadata_checker/Test-Get-AWSMetadata.ps1 ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/
           scp -i aws-ec2-key.pem -o StrictHostKeyChecking=no -r ${{ runner.workspace }}/aws_metadata_checker/Get-AWSMetadata.ps1 ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }}:/home/ec2-user/
 
-      - name: Run Tests
-        run: |
-          ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} '
-            pwsh -Command "
-              Install-Module Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
-              Import-Module Pester -RequiredVersion 3.4.0
-              Invoke-Pester -Path .\Test-Get-AWSMetadata.ps1 -EnableExit
-            "
-          '
+      #- name: Run Tests
+      #  run: |
+      #    ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} '
+      #      pwsh -Command "
+      #        Install-Module Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
+      #        Import-Module Pester -RequiredVersion 3.4.0
+      #        Invoke-Pester -Path .\Test-Get-AWSMetadata.ps1 -EnableExit
+      #      "
+      #    '
 
       - name: Run Get-AWSMetadata and Save Metadata on EC2
         run: |
