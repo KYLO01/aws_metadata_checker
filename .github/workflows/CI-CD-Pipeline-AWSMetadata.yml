@@ -47,20 +47,19 @@ jobs:
 
       - name: Run Tests
         run: |
-          ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} '
-            pwsh -Command "
+          ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} << 'EOF'
+              pwsh
               Install-Module Pester -RequiredVersion 3.4.0 -Force -Scope CurrentUser -SkipPublisherCheck
               Import-Module Pester -RequiredVersion 3.4.0
               Invoke-Pester -Path /home/ec2-user/Test-Get-AWSMetadata.ps1 -EnableExit;
-            "
+            EOF
           '
 
       - name: Run Get-AWSMetadata and Save Metadata on EC2
         run: |
-          ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} '
-            pwsh -Command "
-              ./Get-AWSMetadata.ps1
-            "
+          ssh -i aws-ec2-key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.AWS_EC2_PUBLIC_IP }} << 'EOF'
+              pwsh ./Get-AWSMetadata.ps1
+            EOF
           '
 
       - name: Copy metadata.json from EC2 to runner
