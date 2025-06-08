@@ -1,4 +1,4 @@
-# AWS EC2 Instance Metadata Checker (PowerShell)
+# AWS EC2 Instance Metadata Checker (DevOps AWS Cloud Development and CI/CD Automation)
 
 This project is a PowerShell script that retrieves metadata from an AWS EC2 instance using IMDSv2 (Instance Metadata Service Version 2). It returns a JSON-formatted output of all available metadata, and also allows fetching a specific metadata key.
 
@@ -98,7 +98,10 @@ To run CI CD pipeline
 6. Run git commit
 - (Git Bash Terminal 3 ) git commit -m "[commit message]"
 
-7. Run git push
+7. Run git pull, this pulls the remote changes and re-applies your local changes on top (safest method) and It prevents extra merge commits and keeps your history clean.
+- (Git Bash Terminal 3 ) git pull --rebase origin main
+
+8. Run git push
 - (Git Bash Terminal 3 ) git push -u origin main
 
 8. Check the result on GitHub -> Actions -> Jobs -> CI CD pipeline workflow
